@@ -1,28 +1,32 @@
-name: Build and Download Dist
+name: Build & Publish
 
 on:
   push:
     branches:
-      - main  # 或者你使用的分支名称
+      - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
+      - name: Checkout
+        uses: actions/checkout@v2
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v3
+      - name: Setup Node
+        uses: actions/setup-node@v1
         with:
-          node-version: '20.18.3'
+          node-version: 16.x  # 或更低版本，如 14.x
 
       - name: Install dependencies
-        run: npm install
+        run: yarn install --frozen-lockfile;
 
-      - name: Build project
-        run: npm run build
+      - name: Test
+        run: |
+          yarn test;
+
+      - name: Build
+        run: |
+          yarn build;
 
       - name: Archive dist folder
         run: tar -czvf dist.tar.gz dist/
